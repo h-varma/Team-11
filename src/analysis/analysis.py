@@ -26,23 +26,28 @@ class readIO:
         return data
 
 class process:
-    def __init__(self, data, treshv):
+    def __init__(self, data):
         self.data = data
-        self.treshv = treshv
 
-    def filter_data(self):
+    def filter_data(self, treshv = 1.0e-5):
         if type(self.data) != pd.DataFrame:
             print("only implemented for Pandas Dataframe")
             return None
         var = self.data.var(axis=0)
-        drop_columns = []
         for column, variance in enumerate(var):
-            if var[column] < self.treshv:
+            if var[column] < treshv:
                 drop_columns.append(self.df.columns[column])
         return self.df.drop(drop_columns, axis=1)
 
-    def plot_columns(self):
-        if self.idx == None:
+    def plot_columns(self, idx = None):
+        #maybe change this to a plot function for both types?
+        #if type=pandas this
+        #elif type=nparray something else
+        #or create a method in each child class?
+        if type(self.data) != pd.DataFrame:
+            print("only implemented for Pandas Dataframe")
+            return None
+        if idx == None:
             for col in range(1, len(self.df.columns)):
                 self.df.plot("time", self.df.columns[col])
                 # the replace stuff I added just, because linux isn't happy with </> in the filename name
@@ -53,11 +58,32 @@ class process:
             self.df[self.df.columns[self.idx]].plot()
             plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
 
-test = np.linspace(0,8,9)
-process(test, 2).filter_data()
-
-class process_numerical(process):
-    pass
-
+#for now i just inserted the Methods i thought may be usefull to have in the respective class
 class process_statistical(process):
-    pass
+    def __init__(self, dataframe):
+        super().__init__(dataframe)
+    
+    def something_for_correlation_matrix(self):
+        return None
+    
+    def something_for_L2_Vectornorm(self, indices):
+        #probably call with one or two list of indices for which columns the norm has to be calculated?
+        #maybe another method could generate the lists dependng on whats needed?
+        return None
+    
+#actually you can make this whole calss completely independent since all methods in the parent class
+#currently only work for pandas :D
+#Maybe we can keep it in case we add a tranformation pandas->numpy or sth like that?
+#Or my distribution for the Methods doesn't make too much sense and you have a better idea
+class process_numerical(process):
+    def __init__(self, nparray):
+        super().__init__(nparray)
+    
+    def something_for_fft(self):
+        return None
+    
+    def something_for_transforming_to_complex_array(self):
+        return None
+    
+    def something_for_autocorrelation(self):
+        return None
