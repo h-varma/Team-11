@@ -28,6 +28,7 @@ class readIO:
 class process:
     def __init__(self, data):
         self.data = data
+        # testing remote-vs-local merge
 
     def filter_data(self, treshv = 1.0e-5):
         if type(self.data) != pd.DataFrame:
