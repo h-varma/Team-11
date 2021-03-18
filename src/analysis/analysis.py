@@ -9,18 +9,37 @@ class readIO:
     Either as numpy array or as pandas Dataframe.
 
     :Input: Filename and relative path to file.
-    :Returns: The data either as Pandas Dataframe or Numpy Array."""
+    :Returns: The data either as Pandas Dataframe or Numpy Array.
+    """
+    
     def __init__(self, filedir, filename):
+        """init function
+
+        :param filedir: relative path
+        :type filedir: String
+        :param filename: name of the file
+        :type filename: String
+        """
         self.filedir = filedir
         self.filename = filename
 
     def read_in_df(self):
+        """Read in a pandas csv
+
+        :return: pandas DataFrame
+        :rtype: pd.DataFrame
+        """
         name = '{}{}'.format(self.filedir, self.filename)
         print('Reading from file {} - pandas'.format(name))
         data = pd.read_csv(name, r'\s+')
         return data
 
     def read_in_np(self):
+        """Read in a numpy array
+
+        :return: numpy array
+        :rtype: np.ndarray
+        """
         name = '{}{}'.format(self.filedir, self.filename)
         print('Reading from file {} - numpy'.format(name))
         data = np.loadtxt(name, skiprows=1)
