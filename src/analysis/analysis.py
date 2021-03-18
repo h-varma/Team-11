@@ -4,15 +4,12 @@ import pandas as pd
 import seaborn as sbn
 
 class readIO:
-    
-    def __init__(self, filedir, filename):
-        """ Class for reading in the data.
-        Either as numpy array or as pandas Dataframe.
+    """ Class for reading in the data.
+    Either as numpy array or as pandas Dataframe.
 
-        :Input: filedir: is the path to the folder
-                filename: name of the file
-        :Returns: The data either as Pandas or Numpy Dataframe
-        """
+    :Input: Filename and relative path to file.
+    :Returns: The data either as Pandas Dataframe or Numpy Array."""
+    def __init__(self, filedir, filename):
         self.filedir = filedir
         self.filename = filename
 
