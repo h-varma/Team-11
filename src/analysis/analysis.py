@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sbn
+#import seaborn as sbn
+from typing import Union
 
 class readIO:
     """ Class for reading in the data.
@@ -26,7 +27,7 @@ class readIO:
         return data
 
 class process:
-    def __init__(self, data):
+    def __init__(self, data:pd.DataFrame):
         self.data = data
 
     def filter_data(self, treshv = 1.0e-5):
@@ -39,24 +40,25 @@ class process:
                 drop_columns.append(self.df.columns[column])
         return self.df.drop(drop_columns, axis=1)
 
-    def plot_columns(self, idx = None):
+    def plot_columns(self, idx:int = None):
         #maybe change this to a plot function for both types?
         #if type=pandas this
         #elif type=nparray something else
         #or create a method in each child class?
-        if type(self.data) != pd.DataFrame:
-            print("only implemented for Pandas Dataframe")
-            return None
-        if idx == None:
-            for col in range(1, len(self.df.columns)):
-                self.df.plot("time", self.df.columns[col])
-                # the replace stuff I added just, because linux isn't happy with </> in the filename name
-                # plt.savefig(str(filename) + str(df.columns[col]).replace("<", "").replace(">", ""))
-                plt.show()
-                plt.close()
-        else:
-            self.df[self.df.columns[self.idx]].plot()
-            plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
+        if type(self.data) == pd.DataFrame:
+            if idx == None:
+                for col in range(1, len(self.df.columns)):
+                    self.df.plot("time", self.df.columns[col])
+                    # the replace stuff I added just, because linux isn't happy with </> in the filename name
+                    # plt.savefig(str(filename) + str(df.columns[col]).replace("<", "").replace(">", ""))
+                    plt.show()
+                    plt.close()
+            else:
+                self.df[self.df.columns[self.idx]].plot()
+                plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
+        elif type(self.data) == np.ndarray:
+            print("this is an array")
+            pass
 
 #for now i just inserted the Methods i thought may be usefull to have in the respective class
 class process_statistical(process):
