@@ -4,7 +4,15 @@ import pandas as pd
 import seaborn as sbn
 
 class readIO:
+    
     def __init__(self, filedir, filename):
+        """ Class for reading in the data.
+        Either as numpy array or as pandas Dataframe.
+
+        :Input: filedir: is the path to the folder
+                filename: name of the file
+        :Returns: The data either as Pandas or Numpy Dataframe
+        """
         self.filedir = filedir
         self.filename = filename
 
@@ -20,15 +28,16 @@ class readIO:
         data = np.loadtxt(name, skiprows=1)
         return data
 
-class statistical_methods:
-    def __init__(self, df, treshv, filename, idx):
-        self.df = df
+class process:
+    def __init__(self, data, treshv):
+        self.data = data
         self.treshv = treshv
-        self.filename = filename
-        self.idx = idx
 
     def filter_data(self):
-        var = self.df.var(axis=0)
+        if type(self.data) != pd.DataFrame:
+            print("only implemented for Pandas Dataframe")
+            return None
+        var = self.data.var(axis=0)
         drop_columns = []
         for column, variance in enumerate(var):
             if var[column] < self.treshv:
@@ -47,5 +56,11 @@ class statistical_methods:
             self.df[self.df.columns[self.idx]].plot()
             plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
 
-class numerical_methods:
+test = np.linspace(0,8,9)
+process(test, 2).filter_data()
+
+class process_numerical(process):
+    pass
+
+class process_statistical(process):
     pass
