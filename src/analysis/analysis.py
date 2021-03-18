@@ -20,9 +20,6 @@ class readIO:
         data = np.loadtxt(name, skiprows=1)
         return data
 
-class data_preparation:
-    pass
-
 class statistical_methods:
     def __init__(self, df, treshv, filename, idx):
         self.df = df
