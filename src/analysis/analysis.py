@@ -46,11 +46,26 @@ class readIO:
         return data
 
 class process:
+    """processing methods
+    """
     def __init__(self, data:pd.DataFrame):
+        """This class is about the processing methods
+
+        :param data: provide a pandas dataframe
+        :type data: pd.DataFrame
+        """
         self.data = data
         # testing remote-vs-local merge
 
-    def filter_data(self, treshv = 1.0e-5):
+    def filter_data(self, treshv:float = 1.0e-5):
+        """drop columns where the variance is below treshold.
+        Only for Pandas DataFrames
+
+        :param treshv: treshold value, defaults to 1.0e-5
+        :type treshv: float, optional
+        :return: Dataframe without dropped columns
+        :rtype: pd.DataFrame
+        """
         if type(self.data) != pd.DataFrame:
             print("only implemented for Pandas Dataframe")
             return None
@@ -61,6 +76,11 @@ class process:
         return self.df.drop(drop_columns, axis=1)
 
     def plot_columns(self, idx:int = None):
+        """Plot for Pandas DataFrames
+
+        :param idx: index, defaults to None
+        :type idx: int, optional
+        """
         #maybe change this to a plot function for both types?
         #if type=pandas this
         #elif type=nparray something else
@@ -82,13 +102,36 @@ class process:
 
 #for now i just inserted the Methods i thought may be usefull to have in the respective class
 class process_statistical(process):
+    """Statistical functions
+
+    :param process: inherits class process. Provide data
+    :type process: DataFrame or ndarray
+    """
     def __init__(self, dataframe):
+        """use super is so that child classes that may be using cooperative multiple inheritance 
+        will call the correct next parent class function in the Method Resolution Order (MRO)
+
+        :param dataframe: [description]
+        :type dataframe: [type]
+        """
         super().__init__(dataframe)
     
     def something_for_correlation_matrix(self):
+        """not yet something here
+
+        :return: ?
+        :rtype: ?
+        """
         return None
     
     def something_for_L2_Vectornorm(self, indices):
+        """?
+
+        :param indices: ?
+        :type indices: ?
+        :return: ?
+        :rtype: ?
+        """
         #probably call with one or two list of indices for which columns the norm has to be calculated?
         #maybe another method could generate the lists dependng on whats needed?
         return None
@@ -98,6 +141,11 @@ class process_statistical(process):
 #Maybe we can keep it in case we add a tranformation pandas->numpy or sth like that?
 #Or my distribution for the Methods doesn't make too much sense and you have a better idea
 class process_numerical(process):
+    """Numerical methods
+
+    :param process: data
+    :type process: DataFrame or nparray
+    """
     def __init__(self, nparray):
         super().__init__(nparray)
     
