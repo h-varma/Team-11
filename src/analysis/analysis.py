@@ -48,6 +48,7 @@ class readIO:
 class process:
     """processing methods
     """
+    #we need here pd and np as input since our parent class should handle both
     def __init__(self, data:pd.DataFrame):
         """This class is about the processing methods
 
@@ -72,8 +73,8 @@ class process:
         var = self.data.var(axis=0)
         for column, variance in enumerate(var):
             if var[column] < treshv:
-                drop_columns.append(self.df.columns[column])
-        return self.df.drop(drop_columns, axis=1)
+                drop_columns.append(self.data.columns[column])
+        return self.data.drop(drop_columns, axis=1)
 
     def plot_columns(self, idx:int = None):
         """Plot for Pandas DataFrames
@@ -95,7 +96,9 @@ class process:
                     plt.close()
             else:
                 self.df[self.df.columns[self.idx]].plot()
-                plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
+                #plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
+                plt.show()
+                plt.close()
         elif type(self.data) == np.ndarray:
             print("this is an array")
             pass
