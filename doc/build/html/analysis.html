@@ -34,30 +34,113 @@
 <span id="analysis-module"></span><h1>analysis module<a class="headerlink" href="#module-analysis" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="analysis.process">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">analysis.</span></code><code class="sig-name descname"><span class="pre">process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treshv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">analysis.</span></code><code class="sig-name descname"><span class="pre">process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>processing methods</p>
 <dl class="py method">
 <dt id="analysis.process.filter_data">
-<code class="sig-name descname"><span class="pre">filter_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process.filter_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">filter_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">treshv</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process.filter_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>drop columns where the variance is below treshold.
+Only for Pandas DataFrames</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>treshv</strong> (<em>float</em><em>, </em><em>optional</em>) – treshold value, defaults to 1.0e-5</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dataframe without dropped columns</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="analysis.process.plot_columns">
-<code class="sig-name descname"><span class="pre">plot_columns</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process.plot_columns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">plot_columns</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process.plot_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot for Pandas DataFrames</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em><em>, </em><em>optional</em>) – index, defaults to None</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="analysis.process_numerical">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">analysis.</span></code><code class="sig-name descname"><span class="pre">process_numerical</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treshv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_numerical" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">analysis.</span></code><code class="sig-name descname"><span class="pre">process_numerical</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nparray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_numerical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#analysis.process" title="analysis.process"><code class="xref py py-class docutils literal notranslate"><span class="pre">analysis.process</span></code></a></p>
+<p>Numerical methods</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>DataFrame</em><em> or </em><em>nparray</em>) – data</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="analysis.process_numerical.something_for_autocorrelation">
+<code class="sig-name descname"><span class="pre">something_for_autocorrelation</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_numerical.something_for_autocorrelation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="analysis.process_numerical.something_for_fft">
+<code class="sig-name descname"><span class="pre">something_for_fft</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_numerical.something_for_fft" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="analysis.process_numerical.something_for_transforming_to_complex_array">
+<code class="sig-name descname"><span class="pre">something_for_transforming_to_complex_array</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_numerical.something_for_transforming_to_complex_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt id="analysis.process_statistical">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">analysis.</span></code><code class="sig-name descname"><span class="pre">process_statistical</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treshv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_statistical" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">analysis.</span></code><code class="sig-name descname"><span class="pre">process_statistical</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_statistical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#analysis.process" title="analysis.process"><code class="xref py py-class docutils literal notranslate"><span class="pre">analysis.process</span></code></a></p>
+<p>Statistical functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>DataFrame</em><em> or </em><em>ndarray</em>) – inherits class process. Provide data</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="analysis.process_statistical.something_for_L2_Vectornorm">
+<code class="sig-name descname"><span class="pre">something_for_L2_Vectornorm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_statistical.something_for_L2_Vectornorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>indices</strong> – <p>?</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>?</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><p>?</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="analysis.process_statistical.something_for_correlation_matrix">
+<code class="sig-name descname"><span class="pre">something_for_correlation_matrix</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.process_statistical.something_for_correlation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>not yet something here</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>?</p>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><p>?</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -77,12 +160,30 @@ Either as numpy array or as pandas Dataframe.</p>
 <dl class="py method">
 <dt id="analysis.readIO.read_in_df">
 <code class="sig-name descname"><span class="pre">read_in_df</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.readIO.read_in_df" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read in a pandas csv</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pandas DataFrame</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="analysis.readIO.read_in_np">
 <code class="sig-name descname"><span class="pre">read_in_np</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#analysis.readIO.read_in_np" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read in a numpy array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
