@@ -119,13 +119,22 @@ class process_statistical(process):
         """
         super().__init__(dataframe)
     
-    def something_for_correlation_matrix(self):
+    def correlation(self):
         """not yet something here
 
         :return: ?
         :rtype: ?
         """
-        return None
+        # can we somehow identify the "time" column automatically?
+        # remove time column and calculate correlation matrix
+        wo_time = self.dataframe.drop("time", axis=1)
+        corr_mat = wo_time.corr()
+        #remove lower triangular
+        corr = corr_mat.where(np.triu(np.ones_like(corr_mat, dtype=bool), k=1))
+        #flatten to vector and remove Nan entries
+        corr_vec = corr.unstack().dropna()
+        #sort according to absolute value
+        return corr_vec.reindex(corr_vec.abs().sort_values(ascending=False).index)
     
     def something_for_L2_Vectornorm(self, indices):
         """?
