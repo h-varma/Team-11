@@ -1,18 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-#import seaborn as sbn
+# import seaborn as sbn
 from typing import Union
 import warnings
 
-class readIO:
+
+class ReadIO:
     """ Class for reading in the data.
     Either as numpy array or as pandas Dataframe.
 
     :Input: Filename and relative path to file.
     :Returns: The data either as Pandas Dataframe or Numpy Array.
     """
-    
+
     def __init__(self, filedir, filename):
         """init function
 
@@ -46,11 +47,13 @@ class readIO:
         data = np.loadtxt(name, skiprows=1)
         return data
 
-class process:
+
+class Process:
     """processing methods
     """
-    #we need here pd and np as input since our parent class should handle both
-    def __init__(self, data:pd.DataFrame):
+
+    # we need here pd and np as input since our parent class should handle both
+    def __init__(self, data: pd.DataFrame):
         """This class is about the processing methods
 
         :param data: provide a pandas dataframe or numpy array
@@ -59,7 +62,7 @@ class process:
         self.data = data
         # testing remote-vs-local merge
 
-    def filter_data(self, treshv:float = 1.0e-5):
+    def filter_data(self, treshv: float = 1.0e-5):
         """drop columns where the variance is below treshold.
         Only for Pandas DataFrames
 
@@ -78,7 +81,7 @@ class process:
                 drop_columns.append(self.data.columns[column])
         self.data = self.data.drop(drop_columns, axis=1)
 
-    def plot_columns(self, idx:int = None):
+    def plot_columns(self, idx: int = None):
         """Plot for Pandas DataFrames
 
         :param idx: index, defaults to None
@@ -94,7 +97,7 @@ class process:
                     plt.close()
             else:
                 self.data[self.data.columns[idx]].plot()
-                #plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
+                # plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
                 plt.show()
                 plt.close()
         elif type(self.data) == np.ndarray:
@@ -102,12 +105,13 @@ class process:
             pass
 
 
-class process_statistical(process):
+class ProcessStatistical(Process):
     """Statistical functions
 
-    :param process: inherits class process. Provide data
-    :type process: DataFrame or ndarray
+    :param Process: inherits class process. Provide data
+    :type Process: DataFrame or ndarray
     """
+
     def __init__(self, dataframe):
         """use super is so that child classes that may be using cooperative multiple inheritance 
         will call the correct next parent class function in the Method Resolution Order (MRO)
@@ -116,7 +120,7 @@ class process_statistical(process):
         :type dataframe: [type]
         """
         super().__init__(dataframe)
-    
+
     def correlation(self):
         """calculates Correlation Matrix of Dataframe, removes the lower triangular.
         The output will be flattened and sorted by absolute value.
@@ -126,13 +130,13 @@ class process_statistical(process):
         """
         # calculate correlation matrix
         corr_mat = self.data.corr()
-        #remove lower triangular
+        # remove lower triangular
         corr = corr_mat.where(np.triu(np.ones_like(corr_mat, dtype=bool), k=1))
-        #flatten to vector and remove Nan entries
+        # flatten to vector and remove Nan entries
         corr_vec = corr.unstack().dropna()
-        #sort according to absolute value
+        # sort according to absolute value
         return corr_vec.reindex(corr_vec.abs().sort_values(ascending=False).index)
-    
+
     def distance(self, idx_list1, idx_list2):
         """calculates the euclidean distance between 2 columns of an array.
         The column indices are provided as lists. Returns the distance Norm(ar[idx_list1[i]]-ar[idx_list2[i]]).
@@ -142,7 +146,7 @@ class process_statistical(process):
         :return: ?
         :rtype: ?
         """
-        #maybe another method could generate the lists dependng on whats needed?
+        # maybe another method could generate the lists dependng on whats needed?
         if type(self.data) != np.ndarray:
             print("works only for numpy array")
             return None
@@ -153,20 +157,22 @@ class process_statistical(process):
         for i in range(len(idx_list1)):
             ret[i] = np.linalg.norm(self.data[idx_list1[i]] - self.data[idx_list2[i]])
         return ret
-    
-#actually you can make this whole calss completely independent since all methods in the parent class
-#currently only work for pandas :D
-#Maybe we can keep it in case we add a tranformation pandas->numpy or sth like that?
-#Or my distribution for the Methods doesn't make too much sense and you have a better idea
-class process_numerical(process):
+
+
+# actually you can make this whole calss completely independent since all methods in the parent class
+# currently only work for pandas :D
+# Maybe we can keep it in case we add a tranformation pandas->numpy or sth like that?
+# Or my distribution for the Methods doesn't make too much sense and you have a better idea
+class ProcessNumerical(Process):
     """Numerical methods
 
-    :param process: data
-    :type process: DataFrame or nparray
+    :param Process: data
+    :type Process: DataFrame or nparray
     """
+
     def __init__(self, data: Union[pd.DataFrame, np.ndarray]):
         super().__init__(data)
-    
+
     def discrete_fourier_transform(self):
         if type(self.data) == pd.DataFrame:
             return np.fft.fft(self.data.drop("time", axis=1).values)
@@ -178,7 +184,7 @@ class process_numerical(process):
         complex_matrix.real = self.data[:, 0::2]
         complex_matrix.imag = self.data[:, 1::2]
         self.data = complex_matrix
-    
+
     def compute_autocorrelation(self):
         total_autocorr = np.zeros(self.data.shape[0], dtype=np.complex128)
         for t in range(self.data.shape[0]):
