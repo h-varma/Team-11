@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 #import seaborn as sbn
 from typing import Union
+import warnings
 
 class readIO:
     """ Class for reading in the data.
@@ -68,9 +69,10 @@ class process:
         :rtype: pd.DataFrame
         """
         if type(self.data) != pd.DataFrame:
-            print("only implemented for Pandas Dataframe")
+            warnings.warn("Filter data is only implemented for Pandas Dataframe")
             return None
         var = self.data.var(axis=0)
+        drop_columns = []
         for column, variance in enumerate(var):
             if var[column] < treshv:
                 drop_columns.append(self.data.columns[column])
@@ -83,15 +85,15 @@ class process:
         :type idx: int, optional
         """
         if type(self.data) == pd.DataFrame:
-            if idx == None:
-                for col in range(1, len(self.df.columns)):
-                    self.df.plot("time", self.df.columns[col])
+            if idx is None:
+                for col in range(1, len(self.data.columns)):
+                    self.data.plot("time", self.data.columns[col])
                     # the replace stuff I added just, because linux isn't happy with </> in the filename name
                     # plt.savefig(str(filename) + str(df.columns[col]).replace("<", "").replace(">", ""))
                     plt.show()
                     plt.close()
             else:
-                self.df[self.df.columns[self.idx]].plot()
+                self.data[self.data.columns[idx]].plot()
                 #plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
                 plt.show()
                 plt.close()
@@ -123,7 +125,7 @@ class process_statistical(process):
         :rtype: ?
         """
         # calculate correlation matrix
-        corr_mat = self.dataframe.corr()
+        corr_mat = self.data.corr()
         #remove lower triangular
         corr = corr_mat.where(np.triu(np.ones_like(corr_mat, dtype=bool), k=1))
         #flatten to vector and remove Nan entries
@@ -141,7 +143,7 @@ class process_statistical(process):
         :rtype: ?
         """
         #maybe another method could generate the lists dependng on whats needed?
-        if type(self.dataframe) != np.ndarray:
+        if type(self.data) != np.ndarray:
             print("works only for numpy array")
             return None
         if len(idx_list1) != len(idx_list2):
@@ -149,7 +151,7 @@ class process_statistical(process):
             return None
         ret = np.zeros(len(idx_list1))
         for i in range(len(idx_list1)):
-            ret[i] = np.linalg.norm(self.dataframe[idx_list1[i]] - self.dataframe[idx_list2[i]])
+            ret[i] = np.linalg.norm(self.data[idx_list1[i]] - self.data[idx_list2[i]])
         return ret
     
 #actually you can make this whole calss completely independent since all methods in the parent class
