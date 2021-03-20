@@ -52,8 +52,8 @@ class process:
     def __init__(self, data:pd.DataFrame):
         """This class is about the processing methods
 
-        :param data: provide a pandas dataframe
-        :type data: pd.DataFrame
+        :param data: provide a pandas dataframe or numpy array
+        :type data: pd.DataFrame or np.ndarray
         """
         self.data = data
         # testing remote-vs-local merge
@@ -82,10 +82,6 @@ class process:
         :param idx: index, defaults to None
         :type idx: int, optional
         """
-        #maybe change this to a plot function for both types?
-        #if type=pandas this
-        #elif type=nparray something else
-        #or create a method in each child class?
         if type(self.data) == pd.DataFrame:
             if idx == None:
                 for col in range(1, len(self.df.columns)):
@@ -103,7 +99,7 @@ class process:
             print("this is an array")
             pass
 
-#for now i just inserted the Methods i thought may be usefull to have in the respective class
+
 class process_statistical(process):
     """Statistical functions
 
@@ -120,15 +116,14 @@ class process_statistical(process):
         super().__init__(dataframe)
     
     def correlation(self):
-        """not yet something here
+        """calculates Correlation Matrix of Dataframe, removes the lower triangular.
+        The output will be flattened and sorted by absolute value.
 
         :return: ?
         :rtype: ?
         """
-        # can we somehow identify the "time" column automatically?
-        # remove time column and calculate correlation matrix
-        wo_time = self.dataframe.drop("time", axis=1)
-        corr_mat = wo_time.corr()
+        # calculate correlation matrix
+        corr_mat = self.dataframe.corr()
         #remove lower triangular
         corr = corr_mat.where(np.triu(np.ones_like(corr_mat, dtype=bool), k=1))
         #flatten to vector and remove Nan entries
@@ -136,17 +131,26 @@ class process_statistical(process):
         #sort according to absolute value
         return corr_vec.reindex(corr_vec.abs().sort_values(ascending=False).index)
     
-    def something_for_L2_Vectornorm(self, indices):
-        """?
+    def distance(self, idx_list1, idx_list2):
+        """calculates the euclidean distance between 2 columns of an array.
+        The column indices are provided as lists. Returns the distance Norm(ar[idx_list1[i]]-ar[idx_list2[i]]).
 
         :param indices: ?
         :type indices: ?
         :return: ?
         :rtype: ?
         """
-        #probably call with one or two list of indices for which columns the norm has to be calculated?
         #maybe another method could generate the lists dependng on whats needed?
-        return None
+        if type(self.dataframe) != np.ndarray:
+            print("works only for numpy array")
+            pass
+        if len(idx_list1) != len(idx_list2):
+            print("you need to pass to list with the same number of entries")
+            pass
+        ret = np.zeros(len(idx_list1))
+        for i in range(len(idx_list1)):
+            ret[i] = np.linalg.norm(self.dataframe[idx_list1[i]] - self.dataframe[idx_list2[i]])
+        return ret
     
 #actually you can make this whole calss completely independent since all methods in the parent class
 #currently only work for pandas :D
