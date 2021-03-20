@@ -143,10 +143,10 @@ class process_statistical(process):
         #maybe another method could generate the lists dependng on whats needed?
         if type(self.dataframe) != np.ndarray:
             print("works only for numpy array")
-            pass
+            return None
         if len(idx_list1) != len(idx_list2):
             print("you need to pass to list with the same number of entries")
-            pass
+            return None
         ret = np.zeros(len(idx_list1))
         for i in range(len(idx_list1)):
             ret[i] = np.linalg.norm(self.dataframe[idx_list1[i]] - self.dataframe[idx_list2[i]])
