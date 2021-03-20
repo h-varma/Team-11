@@ -76,7 +76,7 @@ class process:
         for column, variance in enumerate(var):
             if var[column] < treshv:
                 drop_columns.append(self.data.columns[column])
-        return self.data.drop(drop_columns, axis=1)
+        self.data = self.data.drop(drop_columns, axis=1)
 
     def plot_columns(self, idx:int = None):
         """Plot for Pandas DataFrames
@@ -164,14 +164,23 @@ class process_numerical(process):
     :param process: data
     :type process: DataFrame or nparray
     """
-    def __init__(self, nparray):
-        super().__init__(nparray)
+    def __init__(self, data: Union[pd.DataFrame, np.ndarray]):
+        super().__init__(data)
     
-    def something_for_fft(self):
-        return None
+    def discrete_fourier_transform(self):
+        if type(self.data) == pd.DataFrame:
+            return np.fft.fft(self.data.drop("time", axis=1).values)
+        elif type(self.data) == np.ndarray:
+            return np.fft.fft(self.data)
+
+    def create_complex_matrix(self):
+        complex_matrix = np.empty([self.data.shape[0], self.data.shape[1] // 2], dtype=np.complex128)
+        complex_matrix.real = self.data[:, 0::2]
+        complex_matrix.imag = self.data[:, 1::2]
+        self.data = complex_matrix
     
-    def something_for_transforming_to_complex_array(self):
-        return None
-    
-    def something_for_autocorrelation(self):
-        return None
+    def compute_autocorrelation(self):
+        total_autocorr = np.zeros(self.data.shape[0], dtype=np.complex128)
+        for t in range(self.data.shape[0]):
+            total_autocorr[t] = sum(self.data[0] * self.data[t])
+        return total_autocorr
