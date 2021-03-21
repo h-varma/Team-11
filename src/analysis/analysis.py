@@ -59,9 +59,9 @@ class Process:
         :param data: provide a pandas dataframe or numpy array
         :type data: pd.DataFrame or np.ndarray
         """
-        self.data = data
+        self.data = {"raw_data": data}
 
-    def filter_data(self, treshv: float = 1.0e-5):
+    def filter_data(self, key, treshv: float = 1.0e-5):
         """drop columns where the variance is below treshold.
         Only for Pandas DataFrames
 
@@ -70,17 +70,18 @@ class Process:
         :return: Dataframe without dropped columns
         :rtype: pd.DataFrame
         """
-        if type(self.data) != pd.DataFrame:
+        if type(self.data[key]) != pd.DataFrame:
             warnings.warn("Filter data is only implemented for Pandas Dataframe")
             return None
-        var = self.data.var(axis=0)
+        df = self.data[key]
+        var = df.var(axis=0)
         drop_columns = []
         for column, variance in enumerate(var):
             if var[column] < treshv:
-                drop_columns.append(self.data.columns[column])
-        self.data = self.data.drop(drop_columns, axis=1)
+                drop_columns.append(df.columns[column])
+        self.data["filtered_data"] = df.drop(drop_columns, axis=1)
 
-    def plot_columns(self, idx: int = None):
+    def plot_columns(self, key, idx: int = None):
         """Plot for Pandas DataFrames
 
         :param idx: index, defaults to None
@@ -214,12 +215,3 @@ class ProcessNumerical(Process):
         for t in range(data.shape[0]):
             total_autocorr[t] = sum(data[0] * data[t])
         return total_autocorr
-
-test_ar = np.linspace(0,15,16)
-test_ar = test_ar.reshape((4,4))
-test_num = ProcessNumerical(test_ar)
-print(test_num)
-print(test_num.data)
-compl = test_num.create_complex_matrix()
-print(compl)
-print(compl.data)
