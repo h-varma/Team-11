@@ -4,6 +4,7 @@ import pandas as pd
 # import seaborn as sbn
 from typing import Union
 import warnings
+import copy
 
 
 class ReadIO:
@@ -160,31 +161,58 @@ class ProcessStatistical(Process):
 
 
 class ProcessNumerical(Process):
-    """Numerical methods
-
-    :param Process: data
-    :type Process: DataFrame or nparray
+    """
+    Class containing methods for numerical analysis.
+    It inherits methods for data processing from the Process class.
     """
 
     def __init__(self, data: Union[pd.DataFrame, np.ndarray]):
+        """
+        :param data: pre-processed data
+        :type data: pd.DataFrame or np.ndarray
+        """
+
         super().__init__(data)
 
-    def discrete_fourier_transform(self):
-        if type(self.data) == pd.DataFrame:
-            return np.fft.fft(self.data.drop("time", axis=1).values)
-        elif type(self.data) == np.ndarray:
-            return np.fft.fft(self.data)
+    def discrete_fourier_transform(self, data: Union[(pd.DataFrame, np.ndarray)] = None):
+        """
+        Compute the discrete fourier transform
+
+        :param data: input data to apply fourier transform on. if None, self.data is used.
+        :type data: pd.DataFrame or np.ndarray
+        :return: discrete fourier transform
+        :rtype: np.ndarray
+        """
+        if data is None:
+            data = copy.deepcopy(self.data)
+        if type(data) == pd.DataFrame:
+            return np.fft.fft(data.drop("time", axis=1).values)
+        elif type(data) == np.ndarray:
+            return np.fft.fft(data)
 
     def create_complex_matrix(self):
+        """
+        Convert the real data matrix containing columns of real and imaginary values into a complex matrix
+        """
         complex_matrix = np.empty([self.data.shape[0], self.data.shape[1] // 2], dtype=np.complex128)
         complex_matrix.real = self.data[:, 0::2]
         complex_matrix.imag = self.data[:, 1::2]
         self.data = complex_matrix
 
-    def compute_autocorrelation(self):
-        total_autocorr = np.zeros(self.data.shape[0], dtype=np.complex128)
-        for t in range(self.data.shape[0]):
-            total_autocorr[t] = sum(self.data[0] * self.data[t])
+    def compute_autocorrelation(self, data: np.ndarray = None):
+        """
+        Compute the autocorrelation
+
+        :param data: input data to compute the autocorrelation for. if None, self.data is used.
+        :type data: np.ndarray
+        :return: autocorrelation
+        :rtype: np.ndarray
+        """
+        if data is None:
+            data = copy.deepcopy(self.data)
+        total_autocorr = np.zeros(data.shape[0], dtype=np.complex128)
+        for t in range(data.shape[0]):
+            total_autocorr[t] = sum(data[0] * data[t])
         return total_autocorr
 
 test_ar = np.linspace(0,15,16)
