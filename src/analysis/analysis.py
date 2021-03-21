@@ -52,15 +52,13 @@ class Process:
     """processing methods
     """
 
-    # we need here pd and np as input since our parent class should handle both
-    def __init__(self, data: pd.DataFrame):
+    def __init__(self, data: Union[pd.DataFrame, np.ndarray]):
         """This class is about the processing methods
 
         :param data: provide a pandas dataframe or numpy array
         :type data: pd.DataFrame or np.ndarray
         """
         self.data = data
-        # testing remote-vs-local merge
 
     def filter_data(self, treshv: float = 1.0e-5):
         """drop columns where the variance is below treshold.
@@ -112,14 +110,14 @@ class ProcessStatistical(Process):
     :type Process: DataFrame or ndarray
     """
 
-    def __init__(self, dataframe):
+    def __init__(self, data: Union[pd.DataFrame, np.ndarray]):
         """use super is so that child classes that may be using cooperative multiple inheritance 
         will call the correct next parent class function in the Method Resolution Order (MRO)
 
         :param dataframe: [description]
         :type dataframe: [type]
         """
-        super().__init__(dataframe)
+        super().__init__(data)
 
     def correlation(self):
         """calculates Correlation Matrix of Dataframe, removes the lower triangular.
@@ -141,10 +139,12 @@ class ProcessStatistical(Process):
         """calculates the euclidean distance between 2 columns of an array.
         The column indices are provided as lists. Returns the distance Norm(ar[idx_list1[i]]-ar[idx_list2[i]]).
 
-        :param indices: ?
-        :type indices: ?
-        :return: ?
-        :rtype: ?
+        :param idx_list1: list of indices
+        :type idx_list1: list[int]
+        :param idx_list2: list of indices
+        :type idx_list2: list[int]
+        :return: Vector with L2 Norms
+        :rtype: np.ndarray
         """
         # maybe another method could generate the lists dependng on whats needed?
         if type(self.data) != np.ndarray:
@@ -159,10 +159,6 @@ class ProcessStatistical(Process):
         return ret
 
 
-# actually you can make this whole calss completely independent since all methods in the parent class
-# currently only work for pandas :D
-# Maybe we can keep it in case we add a tranformation pandas->numpy or sth like that?
-# Or my distribution for the Methods doesn't make too much sense and you have a better idea
 class ProcessNumerical(Process):
     """Numerical methods
 
@@ -190,3 +186,12 @@ class ProcessNumerical(Process):
         for t in range(self.data.shape[0]):
             total_autocorr[t] = sum(self.data[0] * self.data[t])
         return total_autocorr
+
+test_ar = np.linspace(0,15,16)
+test_ar = test_ar.reshape((4,4))
+test_num = ProcessNumerical(test_ar)
+print(test_num)
+print(test_num.data)
+compl = test_num.create_complex_matrix()
+print(compl)
+print(compl.data)
