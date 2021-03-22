@@ -125,31 +125,30 @@ class Process:
 
 
 class ProcessStatistical(Process):
-    """Statistical functions
+    """
+    Class containing methods for statistical analysis.
+    It inherits methods for data processing from the Process class.
 
-    :param Process: inherits class process. Provide data
-    :type Process: DataFrame or ndarray
+    :param data: pre-processed data
+    :type data: pd.DataFrame or np.ndarray
     """
 
     def __init__(self, data: Union[pd.DataFrame, np.ndarray]):
-        """use super is so that child classes that may be using cooperative multiple inheritance 
-        will call the correct next parent class function in the Method Resolution Order (MRO)
-
-        :param dataframe: [description]
-        :type dataframe: [type]
-        """
         super().__init__(data)
 
-    def correlation(self, key):
-        """calculates Correlation Matrix of Dataframe, removes the lower triangular.
+    def correlation(self, key: str):
+        """
+        Calculates Correlation Matrix of Dataframe, removes the lower triangular.
         The output will be flattened and sorted by absolute value.
 
-        :return: ?
-        :rtype: ?
+        :param key: self.data dictionary value for which the correlation matrix needs to be computed
+        :type key: str
+        :return: correlation matrix flattened and sorted by absolute value
+        :rtype: np.ndarray
         """
         df = self.data[key]
         if type(df) != pd.DataFrame:
-            print(f"works only for pd Dataframe")
+            warnings.warn("Evaluation of the correlation works only for pandas Dataframe")
             return None
         # calculate correlation matrix
         corr_mat = df.corr()
@@ -160,24 +159,25 @@ class ProcessStatistical(Process):
         # sort according to absolute value
         return corr_vec.reindex(corr_vec.abs().sort_values(ascending=False).index)
 
-    def distance(self, key, idx_list1, idx_list2):
-        """calculates the euclidean distance between 2 columns of an array.
-        The column indices are provided as lists. Returns the distance Norm(ar[idx_list1[i]]-ar[idx_list2[i]]).
+    def distance(self, key: str, idx_list1: list, idx_list2: list):
+        """
+        Calculates the Euclidean distance between 2 columns of an array.
 
-        :param idx_list1: list of indices
+        :param key: self.data dictionary value for which the distance needs to be computed
+        :type key: str
+        :param idx_list1: list of column indices
         :type idx_list1: list[int]
-        :param idx_list2: list of indices
+        :param idx_list2: list of column indices
         :type idx_list2: list[int]
-        :return: Vector with L2 Norms
+        :return: L2 distance between the columns idx_list1 and idx_list2 of self.data[key]
         :rtype: np.ndarray
         """
         # maybe another method could generate the lists dependng on whats needed?
         if type(self.data[key]) != np.ndarray:
-            print("works only for numpy array")
+            warnings.warn("Evaluation of the Euclidean distance works only for numpy array.")
             return None
         if len(idx_list1) != len(idx_list2):
-            print("you need to pass to list with the same number of entries")
-            return None
+            raise ValueError("You need to pass two lists with the same number of entries")
         array = self.data[key]
         ret = np.zeros(len(idx_list1))
         for i in range(len(idx_list1)):
@@ -189,53 +189,50 @@ class ProcessNumerical(Process):
     """
     Class containing methods for numerical analysis.
     It inherits methods for data processing from the Process class.
+
+    :param data: pre-processed data
+    :type data: pd.DataFrame or np.ndarray
     """
 
     def __init__(self, data: Union[pd.DataFrame, np.ndarray]):
-        """
-        :param data: pre-processed data
-        :type data: pd.DataFrame or np.ndarray
-        """
-
         super().__init__(data)
 
-    def discrete_fourier_transform(self, data: Union[(pd.DataFrame, np.ndarray)] = None):
+    def discrete_fourier_transform(self, key: str):
         """
         Compute the discrete fourier transform
 
-        :param data: input data to apply fourier transform on. if None, self.data is used.
-        :type data: pd.DataFrame or np.ndarray
+        :param key: self.data dictionary value for which the discrete fourier transform needs to be computed
+        :type key: str
         :return: discrete fourier transform
         :rtype: np.ndarray
         """
-        if data is None:
-            data = copy.deepcopy(self.data)
-        if type(data) == pd.DataFrame:
-            return np.fft.fft(data.drop("time", axis=1).values)
-        elif type(data) == np.ndarray:
-            return np.fft.fft(data)
+        if type(self.data[key]) == pd.DataFrame:
+            return np.fft.fft(self.data[key].drop("time", axis=1).values)
+        elif type(self.data[key]) == np.ndarray:
+            return np.fft.fft(self.data[key])
 
-    def create_complex_matrix(self):
+    def create_complex_matrix(self, key: str):
         """
         Convert the real data matrix containing columns of real and imaginary values into a complex matrix
-        """
-        complex_matrix = np.empty([self.data.shape[0], self.data.shape[1] // 2], dtype=np.complex128)
-        complex_matrix.real = self.data[:, 0::2]
-        complex_matrix.imag = self.data[:, 1::2]
-        self.data = complex_matrix
 
-    def compute_autocorrelation(self, data: np.ndarray = None):
+        :param key: self.data dictionary value where the real and imaginary values are stored
+        :type key: str
+        """
+        complex_matrix = np.empty([self.data[key].shape[0], self.data[key].shape[1] // 2], dtype=np.complex128)
+        complex_matrix.real = self.data[key][:, 0::2]
+        complex_matrix.imag = self.data[key][:, 1::2]
+        self.data["complex_matrix"] = complex_matrix
+
+    def compute_autocorrelation(self, key: str) -> np.ndarray:
         """
         Compute the autocorrelation
 
-        :param data: input data to compute the autocorrelation for. if None, self.data is used.
-        :type data: np.ndarray
-        :return: autocorrelation
+        :param key: self.data dictionary value for which the autocorrelation needs to be computed
+        :type key: str
+        :return: autocorrelation vector
         :rtype: np.ndarray
         """
-        if data is None:
-            data = copy.deepcopy(self.data)
-        total_autocorr = np.zeros(data.shape[0], dtype=np.complex128)
-        for t in range(data.shape[0]):
-            total_autocorr[t] = sum(data[0] * data[t])
+        total_autocorr = np.zeros(self.data[key].shape[0], dtype=np.complex128)
+        for t in range(self.data[key].shape[0]):
+            total_autocorr[t] = sum(self.data[key][0] * self.data[key][t])
         return total_autocorr
