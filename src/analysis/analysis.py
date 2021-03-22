@@ -61,7 +61,7 @@ class Process:
         """
         self.data = {"raw_data": data}
 
-    def filter_data(self, key, treshv: float = 1.0e-5):
+    def filter_data(self, key = "raw_data", treshv: float = 1.0e-5):
         """drop columns where the variance is below treshold.
         Only for Pandas DataFrames
 
@@ -87,20 +87,21 @@ class Process:
         :param idx: index, defaults to None
         :type idx: int, optional
         """
-        if type(self.data) == pd.DataFrame:
+        if type(self.data[key]) == pd.DataFrame:
+            df = self.data[key]
             if idx is None:
-                for col in range(1, len(self.data.columns)):
-                    self.data.plot("time", self.data.columns[col])
+                for col in range(1, len(df.columns)):
+                    df.plot("time", df.columns[col])
                     # the replace stuff I added just, because linux isn't happy with </> in the filename name
-                    # plt.savefig(str(filename) + str(df.columns[col]).replace("<", "").replace(">", ""))
+                    #plt.savefig(str(filename) + str(df.columns[col]).replace("<", "").replace(">", ""))
                     plt.show()
                     plt.close()
             else:
-                self.data[self.data.columns[idx]].plot()
+                df[df.columns[idx]].plot()
                 # plt.savefig(str(self.filename) + str(self.df.columns[self.idx]).replace("<", "").replace(">", ""))
                 plt.show()
                 plt.close()
-        elif type(self.data) == np.ndarray:
+        elif type(self.data[key]) == np.ndarray:
             print("this is an array")
             pass
 
@@ -121,15 +122,19 @@ class ProcessStatistical(Process):
         """
         super().__init__(data)
 
-    def correlation(self):
+    def correlation(self, key):
         """calculates Correlation Matrix of Dataframe, removes the lower triangular.
         The output will be flattened and sorted by absolute value.
 
         :return: ?
         :rtype: ?
         """
+        df = self.data[key]
+        if type(df) != pd.DataFrame:
+            print(f"works only for pd Dataframe")
+            return None
         # calculate correlation matrix
-        corr_mat = self.data.corr()
+        corr_mat = df.corr()
         # remove lower triangular
         corr = corr_mat.where(np.triu(np.ones_like(corr_mat, dtype=bool), k=1))
         # flatten to vector and remove Nan entries
@@ -137,7 +142,7 @@ class ProcessStatistical(Process):
         # sort according to absolute value
         return corr_vec.reindex(corr_vec.abs().sort_values(ascending=False).index)
 
-    def distance(self, idx_list1, idx_list2):
+    def distance(self, key, idx_list1, idx_list2):
         """calculates the euclidean distance between 2 columns of an array.
         The column indices are provided as lists. Returns the distance Norm(ar[idx_list1[i]]-ar[idx_list2[i]]).
 
@@ -149,15 +154,16 @@ class ProcessStatistical(Process):
         :rtype: np.ndarray
         """
         # maybe another method could generate the lists dependng on whats needed?
-        if type(self.data) != np.ndarray:
+        if type(self.data[key]) != np.ndarray:
             print("works only for numpy array")
             return None
         if len(idx_list1) != len(idx_list2):
             print("you need to pass to list with the same number of entries")
             return None
+        array = self.data[key]
         ret = np.zeros(len(idx_list1))
         for i in range(len(idx_list1)):
-            ret[i] = np.linalg.norm(self.data[idx_list1[i]] - self.data[idx_list2[i]])
+            ret[i] = np.linalg.norm(array[idx_list1[i]] - array[idx_list2[i]])
         return ret
 
 
