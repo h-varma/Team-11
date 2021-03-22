@@ -60,11 +60,27 @@ class Process:
         :type data: pd.DataFrame or np.ndarray
         """
         self.data = {"raw_data": data}
+    
+    def drop_col(self, key: str, name: str):
+        """Drops a specific column of a pd dataframe.
 
-    def filter_data(self, key = "raw_data", treshv: float = 1.0e-5):
+        :param key: str for lookup in dict
+        :type key: str
+        :param name: name of the column to drop
+        :type name: str
+        """
+        df = self.data[key]
+        if type(df) != pd.DataFrame:
+            print(f"works only for pd Dataframe")
+            return None
+        self.data[key] = df.drop(name, axis=1)
+
+    def filter_data(self, key: str = "raw_data", treshv: float = 1.0e-5):
         """drop columns where the variance is below treshold.
         Only for Pandas DataFrames
 
+        :param key: key for lookup in dict, default: "raw_data"
+        :type key: str
         :param treshv: treshold value, defaults to 1.0e-5
         :type treshv: float, optional
         :return: Dataframe without dropped columns
@@ -81,9 +97,11 @@ class Process:
                 drop_columns.append(df.columns[column])
         self.data["filtered_data"] = df.drop(drop_columns, axis=1)
 
-    def plot_columns(self, key, idx: int = None):
+    def plot_columns(self, key: str, idx: int = None):
         """Plot for Pandas DataFrames
 
+        :param key: key for lookup in dict
+        :type key: str
         :param idx: index, defaults to None
         :type idx: int, optional
         """
