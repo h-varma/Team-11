@@ -8,7 +8,7 @@ def circumference_circle(radius:float):
     :param radius: radius of circle
     :type radius: float in cm
     """
-    if radius < 0:
+    if radius < 0.:
         raise ValueError("The radius must be >=0")
     circumference = 2*np.pi*radius
     print("the circumference is C = %fcm"%circumference)
