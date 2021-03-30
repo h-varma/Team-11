@@ -1,7 +1,3 @@
-import pandas as pd
-import sys
-
-sys.path.append("../")
 import analysis
 import pytest
 

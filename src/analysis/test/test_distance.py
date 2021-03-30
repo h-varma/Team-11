@@ -1,11 +1,6 @@
 import pytest
 import numpy as np
-import sys
-
-sys.path.append("../")
 import analysis
-
-sys.path.append("../")
 
 
 def obj_ar(ar):

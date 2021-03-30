@@ -4,7 +4,6 @@ import pandas as pd
 # import seaborn as sbn
 from typing import Union
 import warnings
-import copy
 
 
 class ReadIO:
@@ -71,7 +70,7 @@ class Process:
         """
         df = self.data[key]
         if type(df) != pd.DataFrame:
-            print(f"works only for pd Dataframe")
+            print("works only for pd Dataframe")
             return None
         self.data[key] = df.drop(name, axis=1)
 
