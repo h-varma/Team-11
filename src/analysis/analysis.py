@@ -60,7 +60,7 @@ class Process:
         :type data: pd.DataFrame or np.ndarray
         """
         self.data = {"raw_data": data}
-    
+
     def drop_col(self, key: str, name: str):
         """Drops a specific column of a pd dataframe.
 
@@ -111,7 +111,7 @@ class Process:
                 for col in range(1, len(df.columns)):
                     df.plot("time", df.columns[col])
                     # the replace stuff I added just, because linux isn't happy with </> in the filename name
-                    #plt.savefig(str(filename) + str(df.columns[col]).replace("<", "").replace(">", ""))
+                    # plt.savefig(str(filename) + str(df.columns[col]).replace("<", "").replace(">", ""))
                     plt.show()
                     plt.close()
             else:

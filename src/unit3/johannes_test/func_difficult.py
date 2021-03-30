@@ -1,6 +1,7 @@
 import numpy as np
 
-def circumference_circle(radius:float):
+
+def circumference_circle(radius: float):
     """Calculate for a given radius the circumference of a circle
 
     :param radius: radius of circle
@@ -8,9 +9,10 @@ def circumference_circle(radius:float):
     """
     if radius < 0.:
         raise ValueError("The radius must be >=0")
-    circumference = 2*np.pi*radius
-    print("the circumference is C = %fcm"%circumference)
+    circumference = 2 * np.pi * radius
+    print("the circumference is C = %fcm" % circumference)
     return circumference
+
 
 def euclidean_distance(list_ref, list_comp, vectors):
     """Calculates the Euclidean distance (L2 norm) between pairs of vectors.
